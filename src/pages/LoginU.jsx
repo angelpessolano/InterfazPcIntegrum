@@ -1,20 +1,31 @@
 import React, { useEffect, useState } from 'react';
-import axios from 'axios'
-
+import axios from 'axios';
+//import { getUsers } from '../services/auth.service';
 
 
 const LoginU = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [errorMessage, setErrorMessage] = useState('')
-  const [data,setData]=useState(null)
+  const [datau,setDatau]=useState(null)
 
-  const fetchData=() =>{
-    return axios.get("http://localhost:4000/products").then((response) =>{
-      console.log("FETCH",response.data[0]);
-      setData(response.data)}
+  
+
+  const fetchData=async () =>{
+
+    // try {
+    //   const dataUsers =  await getUsers();
+    //   console.log("DataUsers",dataUsers);
+    //   setData(dataUsers);
       
-    )
+
+    // } catch (error) {
+    //   console.log(error);
+    // }
+  
+    return axios.get("http://localhost:3500/users").then((response) =>{
+      console.log("FETCH",response.data[0]);
+      setDatau(response.data)}    )
   
   }
   useEffect(()=>{
@@ -28,6 +39,7 @@ const LoginU = () => {
 
     // Validar email y contraseña
     console.log(email,password);
+    console.log(datau);
 
     // Enviar datos a la API para iniciar sesión
 
