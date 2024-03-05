@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-//import { getUsers } from '../services/auth.service';
+
 
 
 const LoginU = () => {
@@ -11,27 +11,22 @@ const LoginU = () => {
 
   
 
-  const fetchData=async () =>{
+  const login = async (data) => {
+    try {
+     
 
-    // try {
-    //   const dataUsers =  await getUsers();
-    //   console.log("DataUsers",dataUsers);
-    //   setData(dataUsers);
-      
+      const response = await axios.post('http://localhost:3500/login', data, {
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      });
 
-    // } catch (error) {
-    //   console.log(error);
-    // }
-  
-    return axios.get("http://localhost:3500/users").then((response) =>{
-      console.log("FETCH",response.data[0]);
-      setDatau(response.data)}    )
-  
-  }
-  useEffect(()=>{
-    fetchData();
-    
-  },[])
+      console.log(response.data);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+ 
 
 
   const handleSubmit = (e) => {
@@ -39,7 +34,13 @@ const LoginU = () => {
 
     // Validar email y contraseña
     console.log(email,password);
-    console.log(datau);
+    const data ={
+      "Email": email,
+      "Password":password
+
+    }
+    
+    login(data);
 
     // Enviar datos a la API para iniciar sesión
 
