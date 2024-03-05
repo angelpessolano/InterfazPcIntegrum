@@ -1,0 +1,17 @@
+.user-data {
+    display: flex;
+    flex-direction: column;
+    margin: 1rem;
+    padding: 1rem;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+  }
+  
+  .user-data p {
+    margin-bottom: 0.5rem;
+    font-weight: bold;
+  }
+  
+  .user-data p .bold {
+    font-weight: normal;
+  }
