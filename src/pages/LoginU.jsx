@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { redirect } from "react-router-dom";
 import axios from 'axios';
 
 const LoginU = () => {
@@ -8,20 +9,27 @@ const LoginU = () => {
 
   const login = async (data) => {
     try {
-      const response = await axios.post('http://localhost:3500/login', data, {
+       axios.post('http://localhost:3500/login', data, {
         headers: {
-          'Content-Type': 'application/json'
-        }
-      });
+          'Content-Type': 'application/json',
+         
 
-      console.log(response.data);
+
+        }
+       
+      });
+      
+      window.open('/userlist');
+      window.close();
+
+      
     } catch (error) {
       console.error(error);
       setErrorMessage('Error al iniciar sesión. Por favor, inténtalo de nuevo.');
     }
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     const data = {
@@ -29,7 +37,8 @@ const LoginU = () => {
       "Password": password
     };
 
-    login(data);
+    const res = await login(data);
+    console.log('hola',res);
   };
 
   return (
