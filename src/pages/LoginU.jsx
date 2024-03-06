@@ -19,8 +19,7 @@ const LoginU = () => {
        
       });
       
-      window.open('/userlist');
-      window.close();
+      window.location.href = '/userlist';
 
       
     } catch (error) {

@@ -7,9 +7,9 @@ import ErrorPage from "./errorPage.jsx";
 import LoginU from "./pages/LoginU.jsx";
 import "./index.css";
 import RegisterU from "./pages/RegisterU.jsx";
-import ListUsers from "./pages/UserList.jsx"
+import ListUsers from "./pages/UserList.jsx";
 import Home from "./pages/Home";
-
+import CrudApp from "./pages/CrudTest.jsx";
 
 const router = createBrowserRouter([
   {
@@ -29,6 +29,9 @@ const router = createBrowserRouter([
     path: "userlist",
     element: <ListUsers />,
   },
+  { path: "crud",
+    element: <CrudApp />,
+   }
 ]);
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>

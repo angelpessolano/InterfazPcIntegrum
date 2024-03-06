@@ -19,7 +19,10 @@ const RegisterU = () => {
         }
       });
 
+      
+
       console.log(response.data);
+      window.location.href = '/';
     } catch (error) {
       console.error(error);
     }
