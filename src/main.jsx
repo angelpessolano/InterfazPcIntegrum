@@ -9,7 +9,7 @@ import "./index.css";
 import RegisterU from "./pages/RegisterU.jsx";
 import ListUsers from "./pages/UserList.jsx";
 import Home from "./pages/Home";
-import CrudApp from "./pages/CrudTest.jsx";
+// import Test from "./pages/Test.jsx";
 
 const router = createBrowserRouter([
   {
@@ -29,9 +29,11 @@ const router = createBrowserRouter([
     path: "userlist",
     element: <ListUsers />,
   },
-  { path: "crud",
-    element: <CrudApp />,
-   }
+  // {
+  //   path: "test",
+  //   element: <Test />,
+  // }
+  
 ]);
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>

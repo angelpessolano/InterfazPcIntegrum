@@ -1,33 +1,41 @@
-import React, { useState } from 'react';
-import { redirect } from "react-router-dom";
+import React, { useState ,useEffect} from 'react';
 import axios from 'axios';
 
 const LoginU = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
+  useEffect(() => {
+    
+    console.log('Login attempt completed.',errorMessage);
+
+    
+    
+  },[]);
 
   const login = async (data) => {
     try {
-       axios.post('http://localhost:3500/login', data, {
+      const response = await axios.post('http://localhost:3500/login', data, {
         headers: {
           'Content-Type': 'application/json',
-         
-
-
         }
-       
       });
-      
-      window.location.href = '/userlist';
-
-      
+  
+      // Manejar la respuesta exitosa
+      if (response.status === 200) {
+        // Guardar el token de acceso en el almacenamiento local
+        localStorage.setItem('accessToken', response.data.token);
+        // Redirigir al usuario a la página de inicio
+        window.location.href = '/userlist';
+      }
+  
     } catch (error) {
-      console.error(error);
-      setErrorMessage('Error al iniciar sesión. Por favor, inténtalo de nuevo.');
+     
+      setErrorMessage('Usuario o contraseña incorrectos.');
     }
+  
+    
   };
-
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -36,18 +44,19 @@ const LoginU = () => {
       "Password": password
     };
 
-    const res = await login(data);
-    console.log('hola',res);
+    login(data);
+   
   };
 
   return (
-    <div>
-      <div className="login-page">
+    <div className="modal">
+    <div className="modal-content">
         <div>
           <h1>Iniciar sesión</h1>
         </div>
 
-        <form className="login-form" onSubmit={handleSubmit}>
+        <form  onSubmit={handleSubmit}>
+        <label>Correo Electroníco</label>
           <input
             type="email"
             name="email"
@@ -56,6 +65,7 @@ const LoginU = () => {
             onChange={(e) => setEmail(e.target.value)}
             required
           />
+          <label>Password</label>
           <input
             type="password"
             name="password"
@@ -65,7 +75,7 @@ const LoginU = () => {
             required
           />
           <button type="submit">Iniciar sesión</button>
-          <a href={`/register`}>Registro</a>
+          <a href={`/register`}> <button className="btn-register">Registrate</button></a>
           {errorMessage && <p className="error-message">{errorMessage}</p>}
         </form>
       </div>

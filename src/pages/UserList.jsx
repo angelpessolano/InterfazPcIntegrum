@@ -1,17 +1,18 @@
 import React, { useEffect, useState } from "react";
+import { PDFDownloadLink } from "@react-pdf/renderer";
+import MyDocument from "../components/PDF/MyDocument";
 
 import "../styles/UserList.css";
 
-
 const UserList = () => {
   const [users, setUsers] = useState([]);
-  const [loading, setLoading] = useState(true);  
+  const [loading, setLoading] = useState(true);
   const [selectedItem, setSelectedItem] = useState(null);
   const [showModal, setShowModal] = useState(false);
   const [editedItem, setEditedItem] = useState({
-    Name: '',
-    Lastname: '',
-    Address: '',
+    Name: "",
+    Lastname: "",
+    Address: "",
   });
 
   useEffect(() => {
@@ -20,43 +21,40 @@ const UserList = () => {
   }, []);
 
   const fetchData = async () => {
-    
     try {
-        const response = await fetch("http://localhost:3500/users");
-        if (!response.ok) {
-          throw new Error(`Error fetching data: ${response.status}`);
-        }
-        const data = await response.json();
-        console.log(data);
-        setUsers(data);
-        setLoading(false);
-
-      } catch (error) {
-        console.error("Error fetching data:", error);
-
+      const response = await fetch("http://localhost:3500/users");
+      if (!response.ok) {
+        throw new Error(`Error fetching data: ${response.status}`);
       }
+      const data = await response.json();
+      console.log(data);
+      setUsers(data);
+      setLoading(false);
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
   };
 
   const handleDelete = async (itemId) => {
     try {
       await fetch(`http://localhost:3500/users/${itemId}`, {
-        method: 'DELETE',
+        method: "DELETE",
       });
       // Remove the deleted item from the local state
       setUsers(users.filter((item) => item.Id !== itemId));
     } catch (error) {
-      console.error('Error deleting item:', error);
+      console.error("Error deleting item:", error);
     }
   };
 
   const handleEdit = (item) => {
-    console.log("itemmm",item);
+   
     setSelectedItem(item);
     setEditedItem({
       Name: item.Name,
       Lastname: item.Lastname,
       Address: item.Address,
-      Email:item.Email
+      Email: item.Email,
     });
     setShowModal(true);
   };
@@ -64,10 +62,10 @@ const UserList = () => {
     setShowModal(false);
     setSelectedItem(null);
     setEditedItem({
-      Name: '',
-      Lastname: '',
-      Address: '',
-      Email:''
+      Name: "",
+      Lastname: "",
+      Address: "",
+      Email: "",
     });
   };
   const handleInputChange = (e) => {
@@ -79,13 +77,16 @@ const UserList = () => {
   };
   const handleSaveChanges = async () => {
     try {
-      const response = await fetch(`http://localhost:3500/users/${selectedItem.Id}`, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(editedItem),
-      });
+      const response = await fetch(
+        `http://localhost:3500/users/${selectedItem.Id}`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(editedItem),
+        }
+      );
       if (response.ok) {
         // Update the item in the local state
         setUsers((prevUsers) =>
@@ -95,35 +96,69 @@ const UserList = () => {
         );
         handleModalClose();
       } else {
-        console.error('Error updating item:', response.statusText);
+        console.error("Error updating item:", response.statusText);
       }
     } catch (error) {
-      console.error('Error updating item:', error);
+      console.error("Error updating item:", error);
     }
   };
+ 
+  //   <div>
+  //   <strong>Nombre:</strong> {item.Name}
+  //   <strong>Apellido:</strong> {item.Lastname}
+  //   <strong>Direccion:</strong> {item.Address}
+  //   <strong>Email:</strong> {item.Email}
+  // </div>
   return (
     <div>
-      <h1>Lista de Usuarios</h1>
+      <div className="modal-actions">
+        <h1>Lista de Usuarios</h1>
+
+        <PDFDownloadLink
+              document={<MyDocument  users={users}/>}
+              fileName="ejemplo.pdf"
+            >
+              <button >
+              PDF 
+              </button>
+            </PDFDownloadLink>
+        <a href={`/`}>
+          {" "}
+          <button className="btn-register">Cerrar sesion</button>
+        </a>
+      </div>
+
       {loading ? (
         <p>Cargando...</p>
       ) : (
-        <ul>
+        <ul className="user-table">
           {users.map((item) => (
             <li key={item.Id}>
               <div>
-                <strong>Nombre:</strong> {item.Name}
+                <div>
+                  {" "}
+                  <strong>Nombre:</strong>
+                  {item.Name}
+                </div>
+                <div>
+                  <strong>Apellido:</strong>
+                  {item.Lastname}
+                </div>
+                <div>
+                  {" "}
+                  <strong>Direccion:</strong>
+                  {item.Address}
+                </div>
+                <div>
+                  {" "}
+                  <strong>Email:</strong>
+                  {item.Email}{" "}
+                </div>
               </div>
               <div>
-                <strong>Apellido:</strong> {item.Lastname}
+                <button onClick={() => handleEdit(item)}>Editar</button>
+                <button onClick={() => handleDelete(item.Id)}>Borrar</button>
               </div>
-              <div>
-                <strong>Direccion:</strong> {item.Address}
-              </div>
-              <div>
-                <strong>Email:</strong> {item.Email}
-              </div>
-              <button onClick={() => handleEdit(item)}>Editar</button>
-              <button onClick={() => handleDelete(item.Id)}>Borrar</button>
             </li>
           ))}
         </ul>
@@ -154,12 +189,7 @@ const UserList = () => {
               onChange={handleInputChange}
             />
             <label>Email</label>
-            <input
-              type="text"
-              name="Email"
-              value={editedItem.Email}
-              
-            />
+            <input type="text" name="Email" value={editedItem.Email} />
             <div className="modal-actions">
               <button onClick={handleSaveChanges}>Guardar Cambios</button>
               <button onClick={handleModalClose}>Cancelar</button>
@@ -170,7 +200,5 @@ const UserList = () => {
     </div>
   );
 };
-
-  
 
 export default UserList;
